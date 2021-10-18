@@ -1,0 +1,23 @@
+{
+  "name": "setup-opentap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StefanHolst/setup-opentap.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StefanHolst/setup-opentap/issues"
+  },
+  "homepage": "https://github.com/StefanHolst/setup-opentap#readme",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0"
+  }
+}

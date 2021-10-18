@@ -1,0 +1,14 @@
+name: 'Setup OpenTAP'
+description: 'Setup OpenTAP and install some packages.'
+inputs:
+  opentap-version:  # id of input
+    description: 'Version of OpenTAP to use'
+    required: true
+    default: ''
+  packages:
+    description: 'Packages to install'
+    required: false
+    default: []
+runs:
+  using: 'node12'
+  main: 'index.js'
