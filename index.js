@@ -1,21 +1,31 @@
 const core = require('@actions/core');
-const path = require('path');
-const {chmodSync} = require('fs');
 const { exec } = require('@actions/exec');
+const tc = require('@actions/tool-cache');
 
 try {
-    // Download OpenTAP
+    let args = [];
+
+    // Get version of opentap to download
     var opentapVersion = core.getInput('opentap-version');
-    console.log('Installing OpenTAP version: ', opentapVersion);
-    let scriptPath = path.join(__dirname, 'install-opentap.sh').replace(/'/g, "''"); // Format path to sh file.
-    chmodSync(scriptPath, '777'); // Set permissions to execute
-    let exitCode = exec.exec(scriptPath, opentapVersion, {
-        listeners: {
-          stdout: data => {
-            console.log(data.toString())
-          }
-        }
-    });
+    if (opentapVersion){
+      args.push("version=" + opentapVersion);
+    }
+
+    // Get current arch
+    args.push("architecture=x64")
+
+    // Get current os
+    args.push("os=linux")
+    
+    // Download OpenTAP
+    console.log('Installing OpenTAP: ', args);
+    const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
+
+    // Extract OpenTAP package
+    await tc.extractZip(downloadedFilepath, 'opt/tap');
+
+    // Add to path env
+    core.addPath('/opt/tap')
 
     // Install packages
     var packages = core.getInput('packages')
