@@ -14,9 +14,9 @@ async function main() {
 
     let args = [];
     // Get version/arch and os of opentap to download
-    args.push("version=" + core.getInput('version') ? core.getInput('version') : "");
-    args.push("architecture=" + core.getInput('architecture') ? core.getInput('architecture') : "x64")
-    args.push("os=" + core.getInput('os') ? core.getInput('os') : "linux")
+    args.push("version=" + (!!core.getInput('version') ? core.getInput('version') : ""));
+    args.push("architecture=" + (!!core.getInput('architecture') ? core.getInput('architecture') : "x64"));
+    args.push("os=" + (!!core.getInput('os') ? core.getInput('os') : "linux"));
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
