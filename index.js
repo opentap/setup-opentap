@@ -9,7 +9,7 @@ main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-    const isUnix = core.getInput('os').toLowerCase() != "windows";
+    const isUnix = process.env("$RUNNER_OS" != "Windows");
     const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
 
     let args = [];
