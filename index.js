@@ -36,8 +36,10 @@ async function main() {
     // Add to path env
     core.addPath(destDir)
 
+    await exec.exec(ls, destDir);
+
     // list installed packages
-    await exec.exec((isUnix ? 'tap' : 'tap.exe'), ["package", "list", "-i"])
+    await exec.exec('tap', ["package", "list", "-i"])
   } 
   catch (error) {
     core.setFailed(error.message);
