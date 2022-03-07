@@ -1,23 +1,27 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+const test = require('@actions/setup-dotnet@v1')
 
 main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-    let args = [];
-    // Get version of opentap to download
-    var opentapVersion = core.getInput('version');
-    if (opentapVersion){
-      args.push("version=" + opentapVersion);
-    }
-  
-    // Get current arch
-    args.push("architecture=x64")
 
-    // Get current os
-    args.push("os=linux")
+    // download dotnet install script
+    core.info("Downloading dotnet");
+    const downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
+
+    // Install dotnet 6
+    core.info("Installing dotnet");
+    await exec.exec(downloadedFilepath, ["-c", "6.0"]);
+
+
+    let args = [];
+    // Get version/arch and os of opentap to download
+    args.push("version=" + core.getInput('version') ? core.getInput('version') : "");
+    args.push("architecture=" + core.getInput('architecture') ? core.getInput('architecture') : "x64")
+    args.push("os=" + core.getInput('os') ? core.getInput('os') : "linux")
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
