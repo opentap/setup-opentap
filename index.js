@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+const fs = require('fs');
 const os = require('os');
 
 const WIN_INSTALL_PATH = "C:/Program Files/OpenTAP";
@@ -15,9 +16,16 @@ async function main() {
 
     let args = [];
     // Get version/arch and os of opentap to download
-    args.push("version=" + (!!core.getInput('version') ? core.getInput('version') : ""));
-    args.push("architecture=" + (!!core.getInput('architecture') ? core.getInput('architecture') : "x64"));
-    args.push("os=" + (!!core.getInput('os') ? core.getInput('os') : (isUnix ? "linux" : "windows")));
+    if (!!core.getInput('version'))
+      args.push("version=" + core.getInput('version'));
+    if (!!core.getInput('architecture'))
+      args.push("architecture=" + core.getInput('architecture'));
+    else
+      args.push("architecture=" + (os.arch() == "x32" ? "x86" : "x64")  );
+    if (!!core.getInput('os'))
+      args.push("os=" + core.getInput('os'));
+    else
+      args.push("os=" + (isUnix ? "linux" : "windows"));
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
@@ -35,9 +43,23 @@ async function main() {
 
     // Add to path env
     core.addPath(destDir)
+    
+    // Install packages
+    core.info("Packages: " + core.getInput('packages'));
+    var pkgSpecs = core.getInput('packages').split(",");
+    if (pkgSpecs) {
+      var image = { Repositories: ["packages.opentap.io"], Packages: [] };
+      for (let i = 0; i < pkgSpecs.length; i++) {
+        const name = pkgSpecs[i].split(":")[0];
+        const ver = pkgSpecs[i].split(":")[1];
+        image.Packages.push({ Name: name, Version: ver });
+      }
+      fs.writeFileSync("image.json", JSON.stringify(image));
+      await exec.exec('tap', ["image", "install", "image.json", "--non-interactive", "--merge", "--force"])
+    }
 
     // list installed packages
-    await exec.exec('tap', ["package", "list", "-i"])
+    await exec.exec('tap', ["package", "list", "--installed"])
   } 
   catch (error) {
     core.setFailed(error.message);
