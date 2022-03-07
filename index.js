@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
-const test = require('@actions/setup-dotnet@v1')
 
 main().catch((error) => setFailed(error.message));
 
