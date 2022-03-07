@@ -6,21 +6,6 @@ main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-
-    // download dotnet install script
-    core.info("Downloading dotnet");
-    var downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
-
-    // Make script executable
-    if (core.getInput('os').toLowerCase() != "windows"){
-      await exec.exec("chmod", ["+x",  downloadedFilepath]);
-    }
-
-    // Install dotnet 6
-    core.info("Installing dotnet");
-    await exec.exec(downloadedFilepath, ["-c", "6.0"]);
-
-
     let args = [];
     // Get version/arch and os of opentap to download
     args.push("version=" + core.getInput('version') ? core.getInput('version') : "");
@@ -29,7 +14,7 @@ async function main() {
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
-    downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
+    const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
     // Extract OpenTAP package
     core.info('Unzipping OpenTAP: ' + downloadedFilepath);
