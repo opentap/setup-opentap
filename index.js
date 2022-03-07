@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+import { EOL } from 'os';
 
 const WIN_INSTALL_PATH = "C:/Program Files/OpenTAP";
 const UNIX_INSTALL_PATH = "/opt/tap";
@@ -9,7 +10,7 @@ main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-    const isUnix = tc.IS_WINDOWS == false;
+    const isUnix = process.platform !== "win32";
     const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
 
     let args = [];
