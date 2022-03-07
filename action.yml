@@ -4,9 +4,6 @@ inputs:
   version:  # id of input
     description: 'Version of OpenTAP to use'
     required: false
-  package:
-    description: 'Package to install'
-    required: false
 runs:
   using: 'node12'
   main: 'index.js'
