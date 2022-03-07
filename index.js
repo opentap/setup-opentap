@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
-const io = require('@actions/io');
 
 main().catch((error) => setFailed(error.message));
 
@@ -29,7 +28,7 @@ async function main() {
 
         // Set write permissions
         core.info("Configuring OpenTAP")
-        io.chmod("/opt/tap/tap", '+x');
+        exec.exec("chmod", "+x /opt/tap/tap");
 
         // Add to path env
         core.addPath('/opt/tap')
