@@ -10,7 +10,6 @@ main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-    core.info(os.platform());
     const isUnix = os.platform() != "win32";
     const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
 
@@ -38,7 +37,7 @@ async function main() {
     core.addPath(destDir)
 
     // list installed packages
-    await exec.exec('tap', ["package", "list", "-i"])
+    await exec.exec((isUnix ? 'tap' : 'tap.exe'), ["package", "list", "-i"])
   } 
   catch (error) {
     core.setFailed(error.message);
