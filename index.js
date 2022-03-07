@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+import * as ioUtil from '@actions/io/lib/io-util'
 
 
 main().catch((error) => setFailed(error.message));
@@ -20,11 +21,16 @@ async function main() {
         args.push("os=linux")
         
         // Download OpenTAP
-        core.info('Installing OpenTAP: ' + args);
+        core.info('Downloading OpenTAP: ' + args);
         const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
         // Extract OpenTAP package
-        await tc.extractZip(downloadedFilepath, 'opt/tap');
+        core.info('Unzipping OpenTAP: ' + args);
+        await tc.extractZip(downloadedFilepath, '/opt/tap');
+
+        // Set write permissions
+        core.info("Configuring OpenTAP")
+        ioUtil.chmod("/opt/tap/tap", '+x');
 
         // Add to path env
         core.addPath('/opt/tap')
