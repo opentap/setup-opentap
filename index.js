@@ -36,7 +36,7 @@ async function main() {
     // Add to path env
     core.addPath(destDir)
 
-    await exec.exec(ls, destDir);
+    await exec.exec("ls", destDir);
 
     // list installed packages
     await exec.exec('tap', ["package", "list", "-i"])
