@@ -23,7 +23,7 @@ async function main() {
         const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
         // Extract OpenTAP package
-        core.info('Unzipping OpenTAP: ' + args);
+        core.info('Unzipping OpenTAP: ' + downloadedFilepath);
         await tc.extractZip(downloadedFilepath, '/opt/tap');
 
         // Set write permissions
@@ -35,17 +35,17 @@ async function main() {
       }
 
       // Install packages
-      var package = core.getInput('package')
-      if (package){
-        core.info('Installing package: ' + package);
-        exitCode = exec.exec('tap', ["package",  "install", package], {
-            listeners: {
-              stdout: data => {
-                core.info(data.toString())
-              }
-            }
-        });
-      }
+      // var package = core.getInput('package')
+      // if (package){
+      //   core.info('Installing package: ' + package);
+      //   exitCode = exec.exec('tap', ["package",  "install", package], {
+      //       listeners: {
+      //         stdout: data => {
+      //           core.info(data.toString())
+      //         }
+      //       }
+      //   });
+      // }
 
       // list installed packages
       exec.exec('tap', ["package", "list", "-i"])
