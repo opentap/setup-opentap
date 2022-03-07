@@ -1,7 +1,7 @@
 name: 'Setup OpenTAP'
 description: 'Setup OpenTAP and install some packages.'
 inputs:
-  opentap-version:  # id of input
+  version:  # id of input
     description: 'Version of OpenTAP to use'
     required: true
     default: ''

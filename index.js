@@ -1,12 +1,14 @@
 const core = require('@actions/core');
 const { exec } = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+import { promisify } from "util";
+const writeFileAsync = promisify(writeFile);
 
 try {
     let args = [];
 
     // Get version of opentap to download
-    var opentapVersion = core.getInput('opentap-version');
+    var opentapVersion = core.getInput('version');
     if (opentapVersion){
       args.push("version=" + opentapVersion);
     }
@@ -18,7 +20,7 @@ try {
     args.push("os=linux")
     
     // Download OpenTAP
-    console.log('Installing OpenTAP: ', args);
+    core.info('Installing OpenTAP: ' + args);
     const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
     // Extract OpenTAP package
@@ -30,11 +32,22 @@ try {
     // Install packages
     var packages = core.getInput('packages')
     if (packages){
-        console.log('Installing packages: ', packages);
-        exitCode = exec.exec('tap', ["package",  "install"].concat(packages), {
+        core.info('Installing packages: ' + packages);
+
+        var image = {
+          Packages: packages.map(p => {
+            Name: p.name
+            Version: p.version
+          }),
+          Repositories: ["https://packages.opentap.io"]
+        }
+
+        writeFileAsync("image.json", JSON.stringify(image))
+
+        exitCode = exec.exec('tap', ["image",  "install", "image.json"], {
             listeners: {
               stdout: data => {
-                console.log(data.toString())
+                core.info(data.toString())
               }
             }
         });
