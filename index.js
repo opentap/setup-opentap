@@ -12,7 +12,9 @@ async function main() {
     var downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
 
     // Make script executable
-    await exec.exec("chmod", ["+x",  downloadedFilepath]);
+    if (core.getInput('os').toLowerCase() != "windows"){
+      await exec.exec("chmod", ["+x",  downloadedFilepath]);
+    }
 
     // Install dotnet 6
     core.info("Installing dotnet");
