@@ -17,7 +17,7 @@ async function main() {
     // Get version/arch and os of opentap to download
     args.push("version=" + (!!core.getInput('version') ? core.getInput('version') : ""));
     args.push("architecture=" + (!!core.getInput('architecture') ? core.getInput('architecture') : "x64"));
-    args.push("os=" + (!!core.getInput('os') ? core.getInput('os') : "linux"));
+    args.push("os=" + (!!core.getInput('os') ? core.getInput('os') : (isUnix ? "linux" : "windows")));
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
@@ -35,8 +35,6 @@ async function main() {
 
     // Add to path env
     core.addPath(destDir)
-
-    await exec.exec("ls", destDir);
 
     // list installed packages
     await exec.exec('tap', ["package", "list", "-i"])
