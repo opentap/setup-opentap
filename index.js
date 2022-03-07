@@ -9,7 +9,7 @@ async function main() {
 
     // download dotnet install script
     core.info("Downloading dotnet");
-    const downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
+    var downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
 
     // Make script executable
     await exec.exec("chmod", ["+x",  downloadedFilepath]);
