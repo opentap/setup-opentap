@@ -5,8 +5,8 @@ inputs:
     description: 'Version of OpenTAP to use'
     required: true
     default: ''
-  packages:
-    description: 'Packages to install'
+  package:
+    description: 'Package to install'
     required: false
     default: []
 runs:

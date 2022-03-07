@@ -1,8 +1,6 @@
 const core = require('@actions/core');
 const { exec } = require('@actions/exec');
 const tc = require('@actions/tool-cache');
-import { promisify } from "util";
-const writeFileAsync = promisify(writeFile);
 
 try {
     // Get version of opentap to download
@@ -29,21 +27,10 @@ try {
     }
 
     // Install packages
-    var packages = core.getInput('packages')
-    if (packages){
-      core.info('Installing packages: ' + packages);
-
-      var image = {
-        Packages: packages.map(p => {
-          Name: p.name
-          Version: p.version
-        }),
-        Repositories: ["https://packages.opentap.io"]
-      }
-
-      writeFileAsync("image.json", JSON.stringify(image))
-
-      exitCode = exec.exec('tap', ["image",  "install", "image.json"], {
+    var package = core.getInput('package')
+    if (package){
+      core.info('Installing package: ' + package);
+      exitCode = exec.exec('tap', ["package",  "install", package], {
           listeners: {
             stdout: data => {
               core.info(data.toString())
