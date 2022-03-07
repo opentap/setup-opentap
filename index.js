@@ -10,7 +10,7 @@ main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-    const isUnix = io.which("cmd", false);
+    const isUnix = !io.which("cmd", true);
     const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
 
     let args = [];
