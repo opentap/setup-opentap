@@ -1,45 +1,40 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
+const os = require('os');
+
+const WIN_INSTALL_PATH = "C:/Program Files/OpenTAP";
+const UNIX_INSTALL_PATH = "/opt/tap";
 
 main().catch((error) => setFailed(error.message));
 
 async function main() {
   try {
-
-    // download dotnet install script
-    core.info("Downloading dotnet");
-    var downloadedFilepath = await tc.downloadTool('https://dot.net/v1/dotnet-install.sh');
-
-    // Make script executable
-    await exec.exec("chmod", ["+x",  downloadedFilepath]);
-
-    // Install dotnet 6
-    core.info("Installing dotnet");
-    await exec.exec(downloadedFilepath, ["-c", "6.0"]);
-
+    const isUnix = os.platform() != "win32";
+    const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
 
     let args = [];
     // Get version/arch and os of opentap to download
-    args.push("version=" + core.getInput('version') ? core.getInput('version') : "");
-    args.push("architecture=" + core.getInput('architecture') ? core.getInput('architecture') : "x64")
-    args.push("os=" + core.getInput('os') ? core.getInput('os') : "linux")
+    args.push("version=" + (!!core.getInput('version') ? core.getInput('version') : ""));
+    args.push("architecture=" + (!!core.getInput('architecture') ? core.getInput('architecture') : "x64"));
+    args.push("os=" + (!!core.getInput('os') ? core.getInput('os') : (isUnix ? "linux" : "windows")));
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
-    downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
+    const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
     // Extract OpenTAP package
     core.info('Unzipping OpenTAP: ' + downloadedFilepath);
-    await tc.extractZip(downloadedFilepath, '/opt/tap');
-    await exec.exec("ls", ["/opt/tap"])
+    await tc.extractZip(downloadedFilepath, destDir);
 
     // Set write permissions
     core.info("Configuring OpenTAP")
-    await exec.exec("chmod", ["+x",  "/opt/tap/tap"]);
+    if (isUnix){
+      await exec.exec("chmod", ["+x", "/opt/tap/tap"]);
+    }
 
     // Add to path env
-    core.addPath('/opt/tap')
+    core.addPath(destDir)
 
     // list installed packages
     await exec.exec('tap', ["package", "list", "-i"])
