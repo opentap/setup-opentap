@@ -1,8 +1,14 @@
 name: 'Setup OpenTAP'
 description: 'Setup OpenTAP and install some packages.'
 inputs:
-  version:  # id of input
+  version:
     description: 'Version of OpenTAP to use'
+    required: false
+  architecture:
+    description: 'Architecture of OpenTAP to use'
+    required: false
+  os:
+    description: 'OS of OpenTAP to use'
     required: false
 runs:
   using: 'node12'
