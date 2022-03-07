@@ -25,7 +25,7 @@ async function main() {
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
-    const downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
+    downloadedFilepath = await tc.downloadTool('https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?' + args.join("&"));
 
     // Extract OpenTAP package
     core.info('Unzipping OpenTAP: ' + downloadedFilepath);
