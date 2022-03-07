@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
-import * as ioUtil from '@actions/io/lib/io-util'
+import * as fs from 'fs'
 
 
 main().catch((error) => setFailed(error.message));
@@ -30,7 +30,7 @@ async function main() {
 
         // Set write permissions
         core.info("Configuring OpenTAP")
-        ioUtil.chmod("/opt/tap/tap", '+x');
+        fs.chmod("/opt/tap/tap", '+x');
 
         // Add to path env
         core.addPath('/opt/tap')
@@ -48,6 +48,9 @@ async function main() {
             }
         });
       }
+
+      // list installed packages
+      exec.exec('tap', ["package", "list", "-i"])
   } 
   catch (error) {
     core.setFailed(error.message);
