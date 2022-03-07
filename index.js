@@ -25,12 +25,11 @@ async function main() {
         // Extract OpenTAP package
         core.info('Unzipping OpenTAP: ' + downloadedFilepath);
         await tc.extractZip(downloadedFilepath, '/opt/tap');
-        await exec.exec("ls")
-        await exec.exec("pwd")
+        await exec.exec("ls", ["/opt/tap"])
 
         // Set write permissions
         core.info("Configuring OpenTAP")
-        await exec.exec("chmod", "+x /opt/tap/tap");
+        await exec.exec("chmod", ["+x",  "/opt/tap/tap"]);
 
         // Add to path env
         core.addPath('/opt/tap')
