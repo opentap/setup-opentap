@@ -3,12 +3,10 @@ description: 'Setup OpenTAP and install some packages.'
 inputs:
   version:  # id of input
     description: 'Version of OpenTAP to use'
-    required: true
-    default: ''
+    required: false
   package:
     description: 'Package to install'
     required: false
-    default: []
 runs:
   using: 'node12'
   main: 'index.js'
