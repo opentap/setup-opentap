@@ -7,6 +7,7 @@ Here is a small example of how to use the action.
 - uses: opentap/setup-opentap@v1.0
   with:
     version: 9.17.0
+    packages: 'Demonstration,PackagePublish:rc,TUI:any'
 ```
 
 ## Arguments
