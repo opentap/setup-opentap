@@ -4,7 +4,7 @@ GitHub action that installs everything needed to run OpenTAP.
 ## Usage
 Here is a small example of how to use the action.
 ```yml
-- uses: StefanHolst/setup-opentap@v1.0
+- uses: opentap/setup-opentap@v1.0
   with:
     version: 9.17.0
 ```
