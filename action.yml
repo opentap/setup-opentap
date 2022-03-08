@@ -10,6 +10,9 @@ inputs:
   os:
     description: 'OS of OpenTAP to use'
     required: false
+  packages:
+    description: 'Additional packages to install. Format: <name1>:<version1>,<name2>:<version2>'
+    required: false
 runs:
   using: 'node12'
   main: 'index.js'

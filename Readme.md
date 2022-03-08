@@ -15,4 +15,4 @@ There are a few arguments to help you select the right version of OpenTAP to ins
 - `version` - Defaults to the latest release
 - `architecture` - Defaults to the architecture of the runner  
 - `os` - Defaults to the OS of the runner
-- `packages` - a list of additional packages to install
+- `packages` - a list of additional packages to install. Format: `<name1>:<version1>,<name2>:<version2>`

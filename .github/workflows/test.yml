@@ -14,7 +14,7 @@ jobs:
 
   test-linux-packages:
     runs-on: ubuntu-20.04
-    name: Test Linux
+    name: Test Linux (Packages)
     steps:
       - name: Checkout
         uses: actions/checkout@v2

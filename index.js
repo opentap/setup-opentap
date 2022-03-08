@@ -45,16 +45,17 @@ async function main() {
     core.addPath(destDir)
     
     // Install packages
-    core.info("Packages: " + core.getInput('packages'));
-    var pkgSpecs = core.getInput('packages').split(",");
-    if (pkgSpecs) {
-      var image = { Repositories: ["packages.opentap.io"], Packages: [] };
+    if (core.getInput('packages')) {
+      var pkgSpecs = core.getInput('packages').split(",");
+      var image = { Packages: [], Repositories: ["packages.opentap.io"] };
       for (let i = 0; i < pkgSpecs.length; i++) {
         const name = pkgSpecs[i].split(":")[0];
         const ver = pkgSpecs[i].split(":")[1];
         image.Packages.push({ Name: name, Version: ver });
       }
-      fs.writeFileSync("image.json", JSON.stringify(image));
+      const imageJson = JSON.stringify(image, null, 2);
+      fs.writeFileSync("image.json", imageJson);
+      core.info("Image: " + imageJson);
       await exec.exec('tap', ["image", "install", "image.json", "--non-interactive", "--merge", "--force"])
     }
 
