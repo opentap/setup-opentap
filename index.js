@@ -55,7 +55,7 @@ async function main() {
       }
       const imageJson = JSON.stringify(image, null, 2);
       fs.writeFileSync("image.json", imageJson);
-      core.info("Image: " + imageJson);
+      core.debug("Image: " + imageJson);
       await exec.exec('tap', ["image", "install", "image.json", "--non-interactive", "--merge", "--force"])
     }
 
