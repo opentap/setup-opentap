@@ -4,15 +4,30 @@ const tc = require('@actions/tool-cache');
 const fs = require('fs');
 const os = require('os');
 
-const WIN_INSTALL_PATH = "C:/Program Files/OpenTAP";
-const UNIX_INSTALL_PATH = "/opt/tap";
-
 main().catch((error) => setFailed(error.message));
+
+const INSTALL_DIRS = {
+  "linux": "/opt/tap",
+  "windows": "C:/Program Files/OpenTAP",
+  "macos": "/Users/runner/Library/OpenTAP"
+};
 
 async function main() {
   try {
-    const isUnix = os.platform() != "win32";
-    const destDir = isUnix ? UNIX_INSTALL_PATH : WIN_INSTALL_PATH;
+    let platform = "linux";
+    const platformString = os.platform();
+    // Platform enumeration options from: https://nodejs.org/api/os.html#os_os_platform
+    switch (platformString) {
+      case "darwin":
+        platform = "macos";
+        break;
+      case "win32":
+        platform = "windows";
+        break;
+      default: // freebsd, linux, openbsd, sunos, android, etc. They should all work similar to linux
+        platform = "linux"
+        break;
+    }
 
     let args = [];
     // Get version/arch and os of opentap to download
@@ -25,7 +40,7 @@ async function main() {
     if (!!core.getInput('os'))
       args.push("os=" + core.getInput('os'));
     else
-      args.push("os=" + (isUnix ? "linux" : "windows"));
+      args.push("os=" + platform);
     
     // Download OpenTAP
     core.info('Downloading OpenTAP: ' + args);
@@ -33,12 +48,13 @@ async function main() {
 
     // Extract OpenTAP package
     core.info('Unzipping OpenTAP: ' + downloadedFilepath);
+    const destDir = INSTALL_DIRS[platform]
     await tc.extractZip(downloadedFilepath, destDir);
 
     // Set write permissions
     core.info("Configuring OpenTAP")
-    if (isUnix){
-      await exec.exec("chmod", ["+x", "/opt/tap/tap"]);
+    if (platform !== "windows"){
+      await exec.exec("chmod", ["+x", destDir + "/tap"]);
     }
 
     // Add to path env
