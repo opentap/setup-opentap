@@ -57,3 +57,15 @@ jobs:
         with:
           version: '9.17.0'
           packages: 'Runner,TUI:any'
+
+  test-packages-with-spaces:
+    runs-on: ubuntu-20.04
+    name: Test Packages With Spaces In Names
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: '9.21.0'
+          packages: 'Editor X:1.5.0-beta.41+2c6d736c,NATS Server,CSV'
