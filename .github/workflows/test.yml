@@ -68,7 +68,7 @@ jobs:
         id: setup
         with:
           version: '9.22.0-beta.1'
-          packages: 'Sign,Dotfuscator'
+          packages: 'Sign,Dotfuscator,DocumentationGeneration'
           additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
           repository-token: ${{ secrets.OPENTAP_USERTOKEN }}
 
