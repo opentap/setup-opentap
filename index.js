@@ -14,14 +14,14 @@ const INSTALL_DIRS = {
 
 function GetAuthenticationSettings(domain, accessToken) {
   return `<?xml version="1.0" encoding="utf-8"?>
-<AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
-  <Tokens type="System.Collections.Generic.List\`1[[OpenTap.Authentication.TokenInfo]]">
-    <TokenInfo>
-      <AccessToken>${accessToken}</AccessToken>
-      <Domain>${domain}</Domain>
-    </TokenInfo>
-  </Tokens>
-</AuthenticationSettings>`;
+  <AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
+    <Tokens type="System.Collections.Generic.List\`1[[OpenTap.Authentication.TokenInfo]]">
+      <TokenInfo>
+        <AccessToken>${accessToken}</AccessToken>
+        <Domain>${domain}</Domain>
+      </TokenInfo>
+    </Tokens>
+  </AuthenticationSettings>`;
 }
 
 async function main() {
