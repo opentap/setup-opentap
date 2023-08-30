@@ -102,10 +102,11 @@ async function main() {
       const hasToken = repositories.some(r => !!r.token);
       // If an OpenTAP version was specified, verify it is recent enough to support user tokens
       if (hasVersion && hasToken) {
-        const majorMinorPattern = /^(?<major>\d+)\.(?<minor>\d+).*/;
+        const majorMinorPattern = /^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?.*/;
         const match = majorMinorPattern.exec(version);
         const minor = Number(match.groups["minor"]);
-        if (minor <= 21) {
+        const patch = match.groups["patch"];
+        if (minor < 21 || (minor == 21 && !!patch && Number(patch) < 1)) {
           core.setFailed(
             "repository-token support requires OpenTAP 9.22.0 or greater."
           );
