@@ -115,7 +115,7 @@ async function main() {
 
       // If a token was specified, it should be written to AuthenticationSettings.xml in the tap installation.
       if (hasToken) {
-        var authenticationSettings = GetAuthenticationSettings(domain, token);
+        var authenticationSettings = GetAuthenticationSettings(repositories);
         const settingsDir = destDir + "/Settings/";
         const destFile = settingsDir + "AuthenticationSettings.xml";
         if (!fs.existsSync(settingsDir)) {
