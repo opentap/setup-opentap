@@ -70,7 +70,7 @@ jobs:
           version: '9.22.0-beta.1'
           packages: 'Sign,Dotfuscator,DocumentationGeneration'
           additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
-          repository-token: ${{ secrets.OPENTAP_USERTOKEN }}
+          token: ${{ secrets.OPENTAP_USERTOKEN }}
 
   test-packages-with-spaces:
     runs-on: ubuntu-20.04
