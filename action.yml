@@ -13,6 +13,15 @@ inputs:
   packages:
     description: 'Additional packages to install. Format: <name1>:<version1>,<name2>:<version2>'
     required: false
+  token:
+    description: 'A User token used to authenticate'
+    required: false
+  additional-repository:
+    description: 'Additional repository to install packages from'
+    required: false
+  additional-repository-token:
+    description: 'An additional User token to authenticate agains the additional repository'
+    required: false
 runs:
   using: 'node12'
   main: 'index.js'

@@ -12,14 +12,20 @@ const INSTALL_DIRS = {
   macos: "/Users/runner/Library/OpenTAP",
 };
 
-function GetAuthenticationSettings(domain, accessToken) {
+function GetAuthenticationSettings(repositories) {
+  let tokenInfos = repositories.map(r => {
+    return `
+    <TokenInfo>
+      <AccessToken>${r.token}</AccessToken>
+      <Domain>${r.domain}</Domain>
+    </TokenInfo>
+    `
+  })
+
   return `<?xml version="1.0" encoding="utf-8"?>
   <AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
     <Tokens type="System.Collections.Generic.List\`1[[OpenTap.Authentication.TokenInfo]]">
-      <TokenInfo>
-        <AccessToken>${accessToken}</AccessToken>
-        <Domain>${domain}</Domain>
-      </TokenInfo>
+      ${tokenInfos}
     </Tokens>
   </AuthenticationSettings>`;
 }
@@ -75,53 +81,60 @@ async function main() {
 
     // Install packages
     if (core.getInput("packages")) {
-      var pkgSpecs = core.getInput("packages").split(",");
-      const repositories = ["https://packages.opentap.io"];
+      const domainPattern = /^(?<scheme>https?:\/\/)?(?<domain>.+)$/;
 
-      const repository = core.getInput("additional-repository");
-      const hasRepository = !!repository;
-      if (hasRepository) {
-        repositories.push(repository);
-
-        const token = core.getInput("repository-token");
-        const hasToken = !!token;
-        // If a version was specified, verify it is recent enough to support user tokens
-        if (hasVersion && hasToken) {
-          const majorMinorPattern = /^(?<major>\d+)\.(?<minor>\d+).*/;
-          const match = majorMinorPattern.exec(version);
-          const minor = Number(match.groups["minor"]);
-          if (minor <= 21) {
-            core.setFailed(
-              "repository-token support requires OpenTAP 9.22.0 or greater."
-            );
-            return;
-          }
+      const repositories = [
+        {
+          url: "https://packages.opentap.io",
+          domain: domainPattern.exec(repository).groups["domain"],
+          token: core.getInput("token")
         }
+      ];
+      const additionalRepository = core.getInput("additional-repository");
+      if (!!additionalRepository){
+        repositories.push({
+          url: repository,
+          domain: domainPattern.exec(additionalRepository).groups["domain"],
+          token: core.getInput("additional-repository-token")
+        });
+      }
 
-        // If a token was specified, it should be written to AuthenticationSettings.xml in the tap installation.
-        if (hasToken) {
-          // Optionally match a scheme and a domain.
-          const domainPattern = /^(?<scheme>https?:\/\/)?(?<domain>.+)$/;
-          const match = domainPattern.exec(repository);
-          const domain = match.groups["domain"];
-
-          var authenticationSettings = GetAuthenticationSettings(domain, token);
-          const settingsDir = destDir + "/Settings/";
-          const destFile = settingsDir + "AuthenticationSettings.xml";
-          if (!fs.existsSync(settingsDir)) {
-            fs.mkdirSync(settingsDir);
-          }
-          fs.writeFileSync(destFile, authenticationSettings);
-          core.debug(`Wrote authentication settings to ${destFile}`);
+      const hasToken = repositories.some(r => !!r.token);
+      // If an OpenTAP version was specified, verify it is recent enough to support user tokens
+      if (hasVersion && hasToken) {
+        const majorMinorPattern = /^(?<major>\d+)\.(?<minor>\d+).*/;
+        const match = majorMinorPattern.exec(version);
+        const minor = Number(match.groups["minor"]);
+        if (minor <= 21) {
+          core.setFailed(
+            "repository-token support requires OpenTAP 9.22.0 or greater."
+          );
+          return;
         }
       }
 
+      // If a token was specified, it should be written to AuthenticationSettings.xml in the tap installation.
+      if (hasToken) {
+        var authenticationSettings = GetAuthenticationSettings(domain, token);
+        const settingsDir = destDir + "/Settings/";
+        const destFile = settingsDir + "AuthenticationSettings.xml";
+        if (!fs.existsSync(settingsDir)) {
+          fs.mkdirSync(settingsDir);
+        }
+        fs.writeFileSync(destFile, authenticationSettings);
+        core.debug(`Wrote authentication settings to ${destFile}`);
+      }
+
+      // Parse packages argument
+      var pkgSpecs = core.getInput("packages").split(",");
       var image = { Packages: [], Repositories: repositories };
       for (let i = 0; i < pkgSpecs.length; i++) {
         const name = pkgSpecs[i].split(":")[0];
         const ver = pkgSpecs[i].split(":")[1];
         image.Packages.push({ Name: name, Version: ver });
       }
+
+      // Write opentap image
       const imageJson = JSON.stringify(image, null, 2);
       fs.writeFileSync("image.json", imageJson);
       core.debug("Image: " + imageJson);
