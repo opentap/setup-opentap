@@ -34,3 +34,52 @@ jobs:
         id: setup
         with:
           version: '9.17.0'    
+
+  test-macos:
+    runs-on: macos-11
+    name: Test MacOS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: '9.17.0'
+
+  test-macos-packages:
+    runs-on: macos-11
+    name: Test MacOS (Packages)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: '9.17.0'
+          packages: 'Runner,TUI:any'
+
+  test-user-token:
+    runs-on: ubuntu-20.04
+    name: Test Installing Private Packages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: '9.22.0-beta.1'
+          packages: 'Sign,Dotfuscator,DocumentationGeneration'
+          additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
+          token: ${{ secrets.OPENTAP_USERTOKEN }}
+
+  test-packages-with-spaces:
+    runs-on: ubuntu-20.04
+    name: Test Packages With Spaces In Names
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: '9.21.0'
+          packages: 'Editor X:1.5.0-beta.41+2c6d736c,NATS Server,CSV'
