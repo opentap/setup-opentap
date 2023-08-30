@@ -127,7 +127,7 @@ async function main() {
 
       // Parse packages argument
       var pkgSpecs = core.getInput("packages").split(",");
-      var image = { Packages: [], Repositories: repositories };
+      var image = { Packages: [], Repositories: repositories.map(r => r.url) };
       for (let i = 0; i < pkgSpecs.length; i++) {
         const name = pkgSpecs[i].split(":")[0];
         const ver = pkgSpecs[i].split(":")[1];
