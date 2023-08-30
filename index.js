@@ -93,7 +93,7 @@ async function main() {
       const additionalRepository = core.getInput("additional-repository");
       if (!!additionalRepository){
         repositories.push({
-          url: repository,
+          url: additionalRepository,
           domain: domainPattern.exec(additionalRepository).groups["domain"],
           token: core.getInput("additional-repository-token")
         });
