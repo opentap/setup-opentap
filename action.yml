@@ -14,7 +14,7 @@ inputs:
     description: 'Additional packages to install. Format: <name1>:<version1>,<name2>:<version2>'
     required: false
   token:
-    description: 'A User token used to authenticate'
+    description: 'A User token used to authenticate agains packages.opentap.io'
     required: false
   additional-repository:
     description: 'Additional repository to install packages from'
