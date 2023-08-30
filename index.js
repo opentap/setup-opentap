@@ -86,7 +86,7 @@ async function main() {
       const repositories = [
         {
           url: "https://packages.opentap.io",
-          domain: domainPattern.exec(repository).groups["domain"],
+          domain: domainPattern.exec("https://packages.opentap.io").groups["domain"],
           token: core.getInput("token")
         }
       ];
