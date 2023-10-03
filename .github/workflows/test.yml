@@ -86,13 +86,13 @@ jobs:
 
   test-latest-linux:
     runs-on: ubuntu-latest
-    name: Test Linux
+    name: Test installing 9.22.0 rc
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: 9.22.0-rc.1
+          version: 9.21.1
           packages: "PackagePublish"
 
