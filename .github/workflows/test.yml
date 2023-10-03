@@ -83,3 +83,16 @@ jobs:
         with:
           version: '9.21.0'
           packages: 'Editor X:1.5.0-beta.41+2c6d736c,NATS Server,CSV'
+
+  test-latest-linux:
+    runs-on: ubuntu-latest
+    name: Test installing 9.22.0 rc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: 9.21.1-beta.13
+          packages: "PackagePublish"
+
