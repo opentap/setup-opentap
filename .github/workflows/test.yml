@@ -93,6 +93,6 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: 9.21.1
+          version: 9.21.1-beta.13
           packages: "PackagePublish"
 
