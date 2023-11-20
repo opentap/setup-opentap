@@ -6,7 +6,7 @@ jobs:
     name: Test Linux
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -17,7 +17,7 @@ jobs:
     name: Test Linux (Packages)
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -29,7 +29,7 @@ jobs:
     name: Test Windows
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -40,7 +40,7 @@ jobs:
     name: Test MacOS
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -51,7 +51,7 @@ jobs:
     name: Test MacOS (Packages)
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -63,7 +63,7 @@ jobs:
     name: Test Installing Private Packages
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -77,7 +77,7 @@ jobs:
     name: Test Packages With Spaces In Names
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
