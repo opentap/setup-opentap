@@ -60,11 +60,14 @@ jobs:
 
   test-user-token:
     runs-on: ubuntu-20.04
+    env:
+      OPENTAP_USERTOKEN: ${{ secrets.OPENTAP_USERTOKEN }}
     name: Test Installing Private Packages
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: ./ # Uses an action in the root directory
+        if: ${{ env.OPENTAP_USERTOKEN != '' }}
         id: setup
         with:
           version: '9.22.0-beta.1'
