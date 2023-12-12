@@ -81,20 +81,21 @@ async function main() {
 
     // Install packages
     if (core.getInput("packages")) {
-      const domainPattern = /^(?<scheme>https?:\/\/)?(?<domain>.+)$/;
-
       const repositories = [
         {
           url: "https://packages.opentap.io",
-          domain: domainPattern.exec("https://packages.opentap.io").groups["domain"],
+          domain: new URL("https://packages.opentap.io").host,
           token: core.getInput("token")
         }
       ];
-      const additionalRepository = core.getInput("additional-repository");
+      let additionalRepository = core.getInput("additional-repository");
       if (!!additionalRepository){
+        if (!additionalRepository.startsWith("http"))
+          additionalRepository = "https://" + additionalRepository;
+
         repositories.push({
           url: additionalRepository,
-          domain: domainPattern.exec(additionalRepository).groups["domain"],
+          domain: new URL(additionalRepository).host,
           token: core.getInput("additional-repository-token")
         });
       }
@@ -145,7 +146,6 @@ async function main() {
         "image.json",
         "--non-interactive",
         "--merge",
-        "--force",
       ]);
     }
 
