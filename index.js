@@ -13,14 +13,19 @@ const INSTALL_DIRS = {
 };
 
 function GetAuthenticationSettings(repositories) {
-  let tokenInfos = repositories.map(r => {
-    return `
+  let tokenInfos = repositories.map((r) => {
+    // Map the token if it is non-null
+    if (!!r.token) {
+      return `
     <TokenInfo>
       <AccessToken>${r.token}</AccessToken>
       <Domain>${r.domain}</Domain>
     </TokenInfo>
-    `
-  })
+    `;
+    }
+    // Otherwise return an empty string
+    return "";
+  });
 
   return `<?xml version="1.0" encoding="utf-8"?>
   <AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
@@ -62,7 +67,7 @@ async function main() {
     core.info("Downloading OpenTAP: " + args);
     const downloadedFilepath = await tc.downloadTool(
       "https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?" +
-        args.join("&")
+        args.join("&"),
     );
 
     // Extract OpenTAP package
@@ -85,31 +90,32 @@ async function main() {
         {
           url: "https://packages.opentap.io",
           domain: new URL("https://packages.opentap.io").host,
-          token: core.getInput("token")
-        }
+          token: core.getInput("token"),
+        },
       ];
       let additionalRepository = core.getInput("additional-repository");
-      if (!!additionalRepository){
+      if (!!additionalRepository) {
         if (!additionalRepository.startsWith("http"))
           additionalRepository = "https://" + additionalRepository;
 
         repositories.push({
           url: additionalRepository,
           domain: new URL(additionalRepository).host,
-          token: core.getInput("additional-repository-token")
+          token: core.getInput("additional-repository-token"),
         });
       }
 
-      const hasToken = repositories.some(r => !!r.token);
+      const hasToken = repositories.some((r) => !!r.token);
       // If an OpenTAP version was specified, verify it is recent enough to support user tokens
       if (hasVersion && hasToken) {
-        const majorMinorPattern = /^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?.*/;
+        const majorMinorPattern =
+          /^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?.*/;
         const match = majorMinorPattern.exec(version);
         const minor = Number(match.groups["minor"]);
         const patch = match.groups["patch"];
         if (minor < 21 || (minor == 21 && !!patch && Number(patch) < 1)) {
           core.setFailed(
-            "repository-token support requires OpenTAP 9.22.0 or greater."
+            "repository-token support requires OpenTAP 9.22.0 or greater.",
           );
           return;
         }
@@ -129,7 +135,10 @@ async function main() {
 
       // Parse packages argument
       var pkgSpecs = core.getInput("packages").split(",");
-      var image = { Packages: [], Repositories: repositories.map(r => r.url) };
+      var image = {
+        Packages: [],
+        Repositories: repositories.map((r) => r.url),
+      };
       for (let i = 0; i < pkgSpecs.length; i++) {
         const name = pkgSpecs[i].split(":")[0];
         const ver = pkgSpecs[i].split(":")[1];
