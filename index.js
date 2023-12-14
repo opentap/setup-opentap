@@ -13,26 +13,23 @@ const INSTALL_DIRS = {
 };
 
 function GetAuthenticationSettings(repositories) {
-  let tokenInfos = repositories.map((r) => {
-    // Map the token if it is non-null
-    if (!!r.token) {
-      return `
-    <TokenInfo>
-      <AccessToken>${r.token}</AccessToken>
-      <Domain>${r.domain}</Domain>
-    </TokenInfo>
-    `;
-    }
-    // Otherwise return an empty string
-    return "";
-  });
+  let xml = `<?xml version="1.0" encoding="utf-8"?>
+<AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
+  <Tokens type="System.Collections.Generic.List\`1[[OpenTap.Authentication.TokenInfo]]">`;
 
-  return `<?xml version="1.0" encoding="utf-8"?>
-  <AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
-    <Tokens type="System.Collections.Generic.List\`1[[OpenTap.Authentication.TokenInfo]]">
-      ${tokenInfos}
-    </Tokens>
-  </AuthenticationSettings>`;
+  for (const repo of repositories) {
+    if (!!repo.token) {
+      xml += `
+    <TokenInfo>
+      <AccessToken>${repo.token}</AccessToken>
+      <Domain>${repo.domain}</Domain>
+    </TokenInfo>
+      `;
+    }
+  }
+  xml += `  </Tokens>
+</AuthenticationSettings>`;
+  return xml;
 }
 
 async function main() {
