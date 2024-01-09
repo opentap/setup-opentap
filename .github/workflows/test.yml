@@ -55,7 +55,7 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.19.1'
           packages: 'Runner,TUI:any'
 
   test-user-token:
@@ -71,6 +71,20 @@ jobs:
           packages: 'Sign,Dotfuscator,DocumentationGeneration'
           additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
           token: ${{ secrets.OPENTAP_USERTOKEN }}
+
+  test-additional-user-token:
+    runs-on: ubuntu-20.04
+    name: Test Installing Private Packages 2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./ # Uses an action in the root directory
+        id: setup
+        with:
+          version: 9.23.0
+          packages: 'DocumentationGeneration:1.0.2'
+          additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
+          additional-repository-token: '${{ secrets.KS8500_REPO_TOKEN }}'
 
   test-packages-with-spaces:
     runs-on: ubuntu-20.04
