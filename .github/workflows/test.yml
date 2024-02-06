@@ -85,6 +85,7 @@ jobs:
           packages: 'DocumentationGeneration:1.0.2'
           additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
           additional-repository-token: '${{ secrets.KS8500_REPO_TOKEN }}'
+      - run: tap package list --version any | grep '^ESD'
 
   test-packages-with-spaces:
     runs-on: ubuntu-20.04

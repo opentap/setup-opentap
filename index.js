@@ -24,12 +24,33 @@ function GetAuthenticationSettings(repositories) {
       <AccessToken>${repo.token}</AccessToken>
       <Domain>${repo.domain}</Domain>
     </TokenInfo>
-      `;
+`;
     }
   }
   xml += `  </Tokens>
 </AuthenticationSettings>`;
   return xml;
+}
+
+function GetPackageManagerSettings(repositories) {
+  let xml = `<?xml version="1.0" encoding="utf-8"?>
+<PackageManagerSettings type="OpenTap.Package.PackageManagerSettings">
+  <UseLocalPackageCache>true</UseLocalPackageCache>
+  <ShowIncompatiblePackages>false</ShowIncompatiblePackages>
+  <CheckForUpdates>false</CheckForUpdates>
+  <Repositories>
+`
+
+  for (const repo of repositories) {
+    xml += `    <RepositorySettingEntry>
+      <Url>${repo.url}</Url>
+      <IsEnabled>true</IsEnabled>
+    </RepositorySettingEntry>
+`
+  }
+  xml += `  </Repositories>
+</PackageManagerSettings>`
+  return xml
 }
 
 async function main() {
@@ -64,13 +85,18 @@ async function main() {
     core.info("Downloading OpenTAP: " + args);
     const downloadedFilepath = await tc.downloadTool(
       "https://packages.opentap.io/3.0/DownloadPackage/OpenTAP?" +
-        args.join("&"),
+      args.join("&"),
     );
 
     // Extract OpenTAP package
     core.info("Unzipping OpenTAP: " + downloadedFilepath);
     const destDir = INSTALL_DIRS[platform];
+    const settingsDir = destDir + "/Settings/";
     await tc.extractZip(downloadedFilepath, destDir);
+
+    if (!fs.existsSync(settingsDir)) {
+      fs.mkdirSync(settingsDir);
+    }
 
     // Set write permissions
     core.info("Configuring OpenTAP");
@@ -100,6 +126,11 @@ async function main() {
           domain: new URL(additionalRepository).host,
           token: core.getInput("additional-repository-token"),
         });
+
+        const pmSettings = GetPackageManagerSettings(repositories);
+        const destFile = settingsDir + "Package Manager.xml";
+        fs.writeFileSync(destFile, pmSettings);
+        core.debug(`Wrote package manager settings to ${destFile}`);
       }
 
       const hasToken = repositories.some((r) => !!r.token);
@@ -121,11 +152,7 @@ async function main() {
       // If a token was specified, it should be written to AuthenticationSettings.xml in the tap installation.
       if (hasToken) {
         var authenticationSettings = GetAuthenticationSettings(repositories);
-        const settingsDir = destDir + "/Settings/";
         const destFile = settingsDir + "AuthenticationSettings.xml";
-        if (!fs.existsSync(settingsDir)) {
-          fs.mkdirSync(settingsDir);
-        }
         fs.writeFileSync(destFile, authenticationSettings);
         core.debug(`Wrote authentication settings to ${destFile}`);
       }
