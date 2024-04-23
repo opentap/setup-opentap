@@ -60,11 +60,14 @@ jobs:
 
   test-user-token:
     runs-on: ubuntu-20.04
+    env:
+      OPENTAP_USERTOKEN: ${{ secrets.OPENTAP_USERTOKEN }}
     name: Test Installing Private Packages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: ./ # Uses an action in the root directory
+        if: ${{ env.OPENTAP_USERTOKEN != '' }}
         id: setup
         with:
           version: '9.22.0-beta.1'
@@ -74,11 +77,14 @@ jobs:
 
   test-additional-user-token:
     runs-on: ubuntu-20.04
+    env:
+      OPENTAP_USERTOKEN: ${{ secrets.secrets.KS8500_REPO_TOKEN }}
     name: Test Installing Private Packages 2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: ./ # Uses an action in the root directory
+        if: ${{ env.secrets.KS8500_REPO_TOKEN != '' }}
         id: setup
         with:
           version: 9.23.0
