@@ -23,5 +23,5 @@ inputs:
     description: 'An additional User token to authenticate agains the additional repository'
     required: false
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'index.js'
