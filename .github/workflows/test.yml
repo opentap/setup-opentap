@@ -2,7 +2,7 @@ on: [push]
 
 jobs:
   test-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test Linux
     steps:
       - name: Checkout
@@ -13,7 +13,7 @@ jobs:
           version: '9.32.3'
 
   test-linux-container:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: mcr.microsoft.com/dotnet/sdk:9.0
     name: Test Linux Container
     steps:
@@ -25,7 +25,7 @@ jobs:
           version: '9.32.3'
 
   test-linux-packages:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test Linux (Packages)
     steps:
       - name: Checkout
@@ -71,7 +71,7 @@ jobs:
           packages: 'Runner,TUI:any'
 
   test-user-token:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test Installing Private Packages
     steps:
       - name: Checkout
@@ -85,7 +85,7 @@ jobs:
           token: ${{ secrets.OPENTAP_USERTOKEN }}
 
   test-additional-user-token:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test Installing Private Packages 2
     steps:
       - name: Checkout
@@ -100,7 +100,7 @@ jobs:
       - run: tap package list --version any | grep '^ESD'
 
   test-packages-with-spaces:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test Packages With Spaces In Names
     steps:
       - name: Checkout
