@@ -10,7 +10,7 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.32.3'
 
   test-linux-container:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.32.3'
 
   test-linux-packages:
     runs-on: ubuntu-latest
@@ -33,11 +33,8 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
-          # Demonstration pinned to 9.0.7 (last stable without WPF Controls dependency).
-          # Demonstration:any resolves to 9.1.0 which depends on WPF Controls ^9.31.0-rc.2+c39a4f1f,
-          # published only as AnyCPU — the OpenTAP resolver fails to match it against x64 Linux (exit code 33).
-          packages: 'Demonstration:9.0.7,PackagePublish:rc,TUI:any'
+          version: '9.32.3'
+          packages: 'Demonstration,PackagePublish:rc,TUI:any'
 
   test-win:
     runs-on: windows-2022
