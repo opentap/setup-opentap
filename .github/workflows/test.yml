@@ -34,7 +34,7 @@ jobs:
         id: setup
         with:
           version: '9.17.0'
-          packages: 'Demonstration,PackagePublish:3.0.0,TUI:any'
+          packages: 'Demonstration:9.0.7,PackagePublish:rc,TUI:any'
 
   test-win:
     runs-on: windows-2022
