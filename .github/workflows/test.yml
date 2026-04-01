@@ -2,38 +2,38 @@ on: [push]
 
 jobs:
   test-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: Test Linux
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.32.3'
 
   test-linux-container:
-    runs-on: ubuntu-20.04
-    container: mcr.microsoft.com/dotnet/sdk:8.0
+    runs-on: ubuntu-24.04
+    container: mcr.microsoft.com/dotnet/sdk:9.0
     name: Test Linux Container
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.32.3'
 
   test-linux-packages:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: Test Linux (Packages)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.32.3'
           packages: 'Demonstration,PackagePublish:rc,TUI:any'
 
   test-win:
@@ -41,7 +41,7 @@ jobs:
     name: Test Windows
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -52,7 +52,7 @@ jobs:
     name: Test MacOS
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -63,7 +63,7 @@ jobs:
     name: Test MacOS (Packages)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -71,11 +71,11 @@ jobs:
           packages: 'Runner,TUI:any'
 
   test-user-token:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: Test Installing Private Packages
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -85,11 +85,11 @@ jobs:
           token: ${{ secrets.OPENTAP_USERTOKEN }}
 
   test-additional-user-token:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: Test Installing Private Packages 2
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
@@ -100,11 +100,11 @@ jobs:
       - run: tap package list --version any | grep '^ESD'
 
   test-packages-with-spaces:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: Test Packages With Spaces In Names
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
