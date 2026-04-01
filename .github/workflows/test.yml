@@ -97,7 +97,7 @@ jobs:
           packages: 'DocumentationGeneration:1.0.2'
           additional-repository: 'https://internal.automation.keysight.com/api/repository'
           additional-repository-token: '${{ secrets.KS8500_REPO_TOKEN }}'
-      - run: tap package list --version any | grep '^ESD'
+      - run: tap package list --version any | grep '^Dotfuscator'
 
   test-packages-with-spaces:
     runs-on: ubuntu-24.04
