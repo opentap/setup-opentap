@@ -81,7 +81,7 @@ jobs:
         with:
           version: '9.22.0-beta.1'
           packages: 'Sign,Dotfuscator,DocumentationGeneration'
-          additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
+          additional-repository: 'https://internal.automation.keysight.com/api/repository'
           token: ${{ secrets.OPENTAP_USERTOKEN }}
 
   test-additional-user-token:
@@ -95,9 +95,9 @@ jobs:
         with:
           version: 9.23.0
           packages: 'DocumentationGeneration:1.0.2'
-          additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
+          additional-repository: 'https://internal.automation.keysight.com/api/repository'
           additional-repository-token: '${{ secrets.KS8500_REPO_TOKEN }}'
-      - run: tap package list --version any | grep '^ESD'
+      - run: tap package list --version any | grep '^Dotfuscator'
 
   test-packages-with-spaces:
     runs-on: ubuntu-24.04
