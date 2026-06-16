@@ -111,15 +111,17 @@ async function main() {
     }
 
     let args = [];
+    // Build a "key=value" query argument with the value URL-encoded.
+    const arg = (key, value) => key + "=" + encodeURIComponent(value);
     // Get version/arch and os of opentap to download
     const version = core.getInput("version");
     const hasVersion = !!version;
-    if (hasVersion) args.push("version=" + core.getInput("version"));
+    if (hasVersion) args.push(arg("version", version));
     if (!!core.getInput("architecture"))
-      args.push("architecture=" + core.getInput("architecture"));
-    else args.push("architecture=" + getArchitecture());
-    if (!!core.getInput("os")) args.push("os=" + core.getInput("os"));
-    else args.push("os=" + platform);
+      args.push(arg("architecture", core.getInput("architecture")));
+    else args.push(arg("architecture", getArchitecture()));
+    if (!!core.getInput("os")) args.push(arg("os", core.getInput("os")));
+    else args.push(arg("os", platform));
 
     // Download OpenTAP
     core.info("Downloading OpenTAP: " + args);
