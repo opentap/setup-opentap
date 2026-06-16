@@ -56,7 +56,7 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.17.0'
+          version: '9.33.0'
 
   test-macos-packages:
     runs-on: macos-14
@@ -67,7 +67,7 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         id: setup
         with:
-          version: '9.19.1'
+          version: '9.33.0'
           packages: 'Runner,TUI:any'
 
   test-user-token:
@@ -95,9 +95,9 @@ jobs:
         with:
           version: 9.23.0
           packages: 'DocumentationGeneration:1.0.2'
-          additional-repository: 'https://test-automation.pw.keysight.com/api/packages'
+          additional-repository: 'https://internal.automation.keysight.com/api/repository'
           additional-repository-token: '${{ secrets.KS8500_REPO_TOKEN }}'
-      - run: tap package list --version any | grep '^ESD'
+      - run: tap package list --version any | grep '^Sign'
 
   test-packages-with-spaces:
     runs-on: ubuntu-24.04

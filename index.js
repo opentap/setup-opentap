@@ -12,6 +12,24 @@ const INSTALL_DIRS = {
   macos: "/Users/runner/Library/OpenTAP",
 };
 
+function getArchitecture() {
+  // Map Node's os.arch() values to the architecture strings expected by the
+  // OpenTAP package repository.
+  // Node arch enumeration: https://nodejs.org/api/os.html#os_os_arch
+  switch (os.arch()) {
+    case "arm64":
+      return "arm64";
+    case "arm":
+      return "arm";
+    case "ia32":
+    case "x32":
+      return "x86";
+    case "x64":
+    default:
+      return "x64";
+  }
+}
+
 function GetAuthenticationSettings(repositories) {
   let xml = `<?xml version="1.0" encoding="utf-8"?>
 <AuthenticationSettings type="OpenTap.Authentication.AuthenticationSettings">
@@ -93,15 +111,17 @@ async function main() {
     }
 
     let args = [];
+    // Build a "key=value" query argument with the value URL-encoded.
+    const arg = (key, value) => key + "=" + encodeURIComponent(value);
     // Get version/arch and os of opentap to download
     const version = core.getInput("version");
     const hasVersion = !!version;
-    if (hasVersion) args.push("version=" + core.getInput("version"));
+    if (hasVersion) args.push(arg("version", version));
     if (!!core.getInput("architecture"))
-      args.push("architecture=" + core.getInput("architecture"));
-    else args.push("architecture=" + (os.arch() == "x32" ? "x86" : "x64"));
-    if (!!core.getInput("os")) args.push("os=" + core.getInput("os"));
-    else args.push("os=" + platform);
+      args.push(arg("architecture", core.getInput("architecture")));
+    else args.push(arg("architecture", getArchitecture()));
+    if (!!core.getInput("os")) args.push(arg("os", core.getInput("os")));
+    else args.push(arg("os", platform));
 
     // Download OpenTAP
     core.info("Downloading OpenTAP: " + args);
