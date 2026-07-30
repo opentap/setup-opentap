@@ -3,14 +3,16 @@ const exec = require("@actions/exec");
 const tc = require("@actions/tool-cache");
 const fs = require("fs");
 const os = require("os");
+const path = require("path");
 
 main().catch((error) => setFailed(error.message));
 
-const INSTALL_DIRS = {
-  linux: "/opt/tap",
-  windows: "C:/Program Files/OpenTAP",
-  macos: "/Users/runner/Library/OpenTAP",
-};
+// Resolve a per-worker installation directory.
+// This resolves conflicts when the same machine is simultaneously installing different OpenTAP images.
+function getInstallDir() {
+  const base = process.env.RUNNER_TEMP || os.tmpdir();
+  return path.join(base, "OpenTAP");
+}
 
 function getArchitecture() {
   // Map Node's os.arch() values to the architecture strings expected by the
@@ -153,8 +155,9 @@ async function main() {
 
     // Extract OpenTAP package
     core.info("Unzipping OpenTAP: " + downloadedFilepath);
-    const destDir = INSTALL_DIRS[platform];
+    const destDir = getInstallDir();
     const settingsDir = destDir + "/Settings/";
+    core.info("Installing OpenTAP to: " + destDir);
     const extracted = await extractZip(downloadedFilepath, destDir);
     if (!extracted) {
       core.setFailed("Unable to extract zip archive.")
@@ -173,6 +176,8 @@ async function main() {
 
     // Add to path env
     core.addPath(destDir);
+    // Some plugins depend on this environment variable being set.
+    core.exportVariable('TAP_PATH', destDir);
 
     // Install packages
     if (core.getInput("packages")) {
