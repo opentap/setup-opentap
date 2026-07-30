@@ -83,13 +83,34 @@ async function extractZip(file, dest) {
   }
 
   try {
-    // Fall back to powershell if unzip is not available. This is the case on e.g. 
-    // the official dotnet 8 SDK docker image, mcr.microsoft.com/dotnet/sdk:8.0 
+    // Fall back to pwsh if unzip is not available. This is the case on e.g. the official dotnet 8 SDK docker image, mcr.microsoft.com/dotnet/sdk:8.0 
     await exec.exec("pwsh", ["-c", `Expand-Archive -Path "${file}" -DestinationPath "${dest}"`])
     return true;
   } catch {
     // ignore
   }
+
+
+  try {
+    // Fall back to powershell if pwsh is not available. This is the case on some Windows machines.
+    let script = `
+$filename = "${file}"
+$dest = "${dest}"
+$ext = [IO.Path]::GetExtension($filename)
+if ($ext -ne ".zip")
+{
+    Move-Item "$filename" "$($filename).zip"
+    $filename = "$($filename).zip"
+}
+Expand-Archive -Path "$filename" -DestinationPath "$dest"
+`;
+
+    await exec.exec("powershell.exe", ["-c", script])
+    return true;
+  } catch {
+    // ignore
+  }
+
   return false
 }
 
